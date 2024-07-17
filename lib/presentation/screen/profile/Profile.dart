@@ -23,17 +23,20 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              _auth.currentUser!.email.toString(),
-              style: TextStyle(fontSize: height * 0.0275),
-            ),
-            SizedBox(width: width * 0.01),
-          ],
+        title: Text(
+          _auth.currentUser!.email.toString(),
+          style: TextStyle(fontSize: height * 0.0275),
         ),
-        centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => logoutAlert(context: context),
+                );
+              },
+              icon: Icon(Icons.logout))
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _postService.getPosts(),
@@ -44,12 +47,10 @@ class _ProfilePageState extends State<ProfilePage> {
             );
           }
 
-          // Filter posts by the current user's ID
           final posts = snapshot.data!.docs
               .where((post) => post['userId'] == _auth.currentUser!.uid)
               .toList();
 
-          // Check if there are no posts after filtering
           if (posts.isEmpty) {
             return Center(
               child: Text(
@@ -158,17 +159,40 @@ class _ProfilePageState extends State<ProfilePage> {
             onPressed: onPressed,
             child: Text(title),
             style: ButtonStyle(
-              shape: MaterialStateProperty.all(RoundedRectangleBorder(
+              shape: WidgetStateProperty.all(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               )),
-              backgroundColor: MaterialStateProperty.all(
+              backgroundColor: WidgetStateProperty.all(
                 Colors.white24.withOpacity(0.15),
               ),
-              foregroundColor: MaterialStateProperty.all(Colors.white),
+              foregroundColor: WidgetStateProperty.all(Colors.white),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget logoutAlert({context}) {
+    return AlertDialog(
+      title: Text("Logout"),
+      content: Text("Do you want to logout?"),
+      actions: [
+        ElevatedButton(
+            onPressed: () async {
+              await _auth.signOut().then(
+                (value) {
+                  Navigator.pushReplacementNamed(context, "/");
+                },
+              );
+            },
+            child: Text("YES")),
+        ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("NO"))
+      ],
     );
   }
 }

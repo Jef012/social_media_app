@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,10 +7,9 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../constants/utils.dart';
-import '../../../controller/provider/appProvider.dart';
+
 import '../../../controller/repository/authenticationRepo.dart';
 import '../../../models/arguments.dart';
-import '../../../models/authModel.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function updateWidget;
@@ -51,126 +51,133 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.transparent,
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: height,
-          child: Stack(
-            children: [
-              Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                Padding(
-                  padding: EdgeInsets.only(top: height * 0.09),
-                  child: Text(widget.title,
-                      style: GoogleFonts.robotoCondensed(
-                          color: Colors.black87.withOpacity(0.7),
-                          fontSize: height * 0.05,
-                          fontWeight: FontWeight.bold)),
-                ),
-                SizedBox(height: height * 0.15),
-                Form(
-                    key: formKey,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          left: width * 0.06, right: width * 0.06),
-                      child: Stack(
-                        children: [
-                          Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: height * 0.01),
-                                inputField(
-                                    title: 'Mobile number',
-                                    icon: Icons.phone_iphone,
-                                    keyboardType: TextInputType.phone,
-                                    maxLength: 10),
-                                SizedBox(height: height * 0.02),
-                                inputField(
-                                  title: 'Email ID',
-                                  icon: Icons.email,
-                                  keyboardType: TextInputType.emailAddress,
-                                  maxLength: 30,
-                                ),
-                                SizedBox(height: height * 0.02),
-                                inputField(
-                                  title: 'Password',
-                                  icon: Icons.lock,
-                                  keyboardType: TextInputType.text,
-                                  maxLength: 20,
-                                ),
-                                SizedBox(height: height * 0.045),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      if (formKey.currentState!.validate()) {
-                                        formKey.currentState!.save();
-                                        print("EmailId ::: $emailId");
-                                        print("password ::: $password");
-                                        FocusScope.of(context)
-                                            .requestFocus(FocusNode());
-                                        signUp();
-                                      }
-                                    },
-                                    child: Container(
-                                        width: double.infinity,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.056,
-                                        padding: EdgeInsets.only(
-                                            top: height * 0.013,
-                                            bottom: height * 0.013,
-                                            right: width * 0.05,
-                                            left: width * 0.05),
-                                        decoration: BoxDecoration(
-                                            color: HexColor("#0397fe"),
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(3))),
-                                        child: Center(
-                                          child: Text("Sign up",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: height * 0.0215)),
-                                        )),
-                                  ),
-                                ),
-                                SizedBox(height: height * 0.015),
-                              ]),
-                        ],
-                      ),
-                    )),
-                SizedBox(height: height * 0.08),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Have an account?  ",
-                      style: GoogleFonts.robotoCondensed(
-                        color: Colors.white,
-                        fontSize: height * 0.017,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        widget.updateWidget(1, UserArguments(newUser: true));
-                      },
-                      child: Text(
-                        "Login",
+    return PopScope(
+      onPopInvoked: (didPop) {
+        exit(0);
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: Colors.transparent,
+        body: SingleChildScrollView(
+          child: SizedBox(
+            height: height,
+            child: Stack(
+              children: [
+                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: height * 0.09),
+                    child: Text(widget.title,
                         style: GoogleFonts.robotoCondensed(
-                          color: HexColor("#f93467"),
-                          fontSize: height * 0.019,
-                          fontWeight: FontWeight.bold,
+                            color: Colors.black87.withOpacity(0.7),
+                            fontSize: height * 0.05,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                  SizedBox(height: height * 0.15),
+                  Form(
+                      key: formKey,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            left: width * 0.06, right: width * 0.06),
+                        child: Stack(
+                          children: [
+                            Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: height * 0.01),
+                                  inputField(
+                                      title: 'Mobile number',
+                                      icon: Icons.phone_iphone,
+                                      keyboardType: TextInputType.phone,
+                                      maxLength: 10),
+                                  SizedBox(height: height * 0.02),
+                                  inputField(
+                                    title: 'Email ID',
+                                    icon: Icons.email,
+                                    keyboardType: TextInputType.emailAddress,
+                                    maxLength: 30,
+                                  ),
+                                  SizedBox(height: height * 0.02),
+                                  inputField(
+                                    title: 'Password',
+                                    icon: Icons.lock,
+                                    keyboardType: TextInputType.text,
+                                    maxLength: 20,
+                                  ),
+                                  SizedBox(height: height * 0.045),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        if (formKey.currentState!.validate()) {
+                                          formKey.currentState!.save();
+                                          print("EmailId ::: $emailId");
+                                          print("password ::: $password");
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
+                                          signUp();
+                                        }
+                                      },
+                                      child: Container(
+                                          width: double.infinity,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.056,
+                                          padding: EdgeInsets.only(
+                                              top: height * 0.013,
+                                              bottom: height * 0.013,
+                                              right: width * 0.05,
+                                              left: width * 0.05),
+                                          decoration: BoxDecoration(
+                                              color: HexColor("#0397fe"),
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(3))),
+                                          child: Center(
+                                            child: Text("Sign up",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: height * 0.0215)),
+                                          )),
+                                    ),
+                                  ),
+                                  SizedBox(height: height * 0.015),
+                                ]),
+                          ],
+                        ),
+                      )),
+                  SizedBox(height: height * 0.08),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Have an account?  ",
+                        style: GoogleFonts.robotoCondensed(
+                          color: Colors.white,
+                          fontSize: height * 0.017,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ]),
-            ],
+                      TextButton(
+                        onPressed: () {
+                          widget.updateWidget(1, UserArguments(newUser: true));
+                        },
+                        child: Text(
+                          "Login",
+                          style: GoogleFonts.robotoCondensed(
+                            color: HexColor("#f93467"),
+                            fontSize: height * 0.019,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ]),
+              ],
+            ),
           ),
         ),
       ),

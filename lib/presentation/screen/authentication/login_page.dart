@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -47,148 +48,154 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      resizeToAvoidBottomInset: true,
-      body: SingleChildScrollView(
-        child: Container(
-          height: height,
-          child: Stack(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: height * 0.09),
-                    child: Text(widget.title,
-                        style: GoogleFonts.robotoCondensed(
-                            color: Colors.black87.withOpacity(0.7),
-                            fontSize: height * 0.05,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                  SizedBox(height: height * 0.15),
-                  Form(
-                      key: formKey,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            left: width * 0.06, right: width * 0.06),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: height * 0.01),
-                            inputField(
-                              title: 'email address',
-                              keyboardType: TextInputType.text,
-                              maxLength: 40,
-                            ),
-                            SizedBox(height: height * 0.02),
-                            inputField(
-                              title: 'password',
-                              icon: Icons.lock,
-                              keyboardType: TextInputType.text,
-                              maxLength: 20,
-                            ),
-                            SizedBox(height: height * 0.01),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: Text(
-                                  "Forget password?",
-                                  style: GoogleFonts.robotoCondensed(
-                                    color: HexColor("#1471af"),
-                                    fontSize: height * 0.0185,
-                                    fontWeight: FontWeight.bold,
+    return PopScope(
+      onPopInvoked: (didPop) {
+        exit(0);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: true,
+        body: SingleChildScrollView(
+          child: Container(
+            height: height,
+            child: Stack(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: height * 0.09),
+                      child: Text(widget.title,
+                          style: GoogleFonts.robotoCondensed(
+                              color: Colors.black87.withOpacity(0.7),
+                              fontSize: height * 0.05,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    SizedBox(height: height * 0.15),
+                    Form(
+                        key: formKey,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              left: width * 0.06, right: width * 0.06),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: height * 0.01),
+                              inputField(
+                                title: 'email address',
+                                keyboardType: TextInputType.text,
+                                maxLength: 40,
+                              ),
+                              SizedBox(height: height * 0.02),
+                              inputField(
+                                title: 'password',
+                                icon: Icons.lock,
+                                keyboardType: TextInputType.text,
+                                maxLength: 20,
+                              ),
+                              SizedBox(height: height * 0.01),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: GestureDetector(
+                                  onTap: () {},
+                                  child: Text(
+                                    "Forget password?",
+                                    style: GoogleFonts.robotoCondensed(
+                                      color: HexColor("#1471af"),
+                                      fontSize: height * 0.0185,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: height * 0.02),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: GestureDetector(
-                                onTap: () {
-                                  // Navigator.pushReplacementNamed(
-                                  //     context, "/customBottonNaviBar");
+                              SizedBox(height: height * 0.02),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // Navigator.pushReplacementNamed(
+                                    //     context, "/customBottonNaviBar");
 
-                                  if (formKey.currentState!.validate()) {
-                                    formKey.currentState!.save();
-                                    print("EmailId ::: $emailId");
-                                    print("password ::: $password");
-                                    FocusScope.of(context)
-                                        .requestFocus(FocusNode());
-                                    login();
-                                  }
-                                },
-                                child: Container(
-                                    width: double.infinity,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.056,
-                                    padding: EdgeInsets.only(
-                                        top: height * 0.013,
-                                        bottom: height * 0.013,
-                                        right: width * 0.05,
-                                        left: width * 0.05),
-                                    decoration: BoxDecoration(
-                                        color: HexColor("#0397fe"),
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(3))),
-                                    child: Center(
-                                      child: Text("Log In",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: height * 0.0215)),
-                                    )),
+                                    if (formKey.currentState!.validate()) {
+                                      formKey.currentState!.save();
+                                      print("EmailId ::: $emailId");
+                                      print("password ::: $password");
+                                      FocusScope.of(context)
+                                          .requestFocus(FocusNode());
+                                      login();
+                                    }
+                                  },
+                                  child: Container(
+                                      width: double.infinity,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.056,
+                                      padding: EdgeInsets.only(
+                                          top: height * 0.013,
+                                          bottom: height * 0.013,
+                                          right: width * 0.05,
+                                          left: width * 0.05),
+                                      decoration: BoxDecoration(
+                                          color: HexColor("#0397fe"),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(3))),
+                                      child: Center(
+                                        child: Text("Log In",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: height * 0.0215)),
+                                      )),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      )),
-                  SizedBox(height: height * 0.02),
-                ],
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Divider(
-                      color: Colors.white30,
-                      thickness: 2,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Don't have an account?",
-                          style: GoogleFonts.robotoCondensed(
-                            color: Colors.white,
-                            fontSize: height * 0.017,
+                            ],
                           ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            widget.updateWidget(
-                                2, UserArguments(newUser: true));
-                          },
-                          child: Text(
-                            "Sign up",
-                            style: GoogleFonts.robotoCondensed(
-                              color: HexColor("#0397fe"),
-                              fontSize: height * 0.019,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: height * 0.0125),
+                        )),
+                    SizedBox(height: height * 0.02),
                   ],
                 ),
-              ),
-            ],
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Divider(
+                        color: Colors.white30,
+                        thickness: 2,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Don't have an account?",
+                            style: GoogleFonts.robotoCondensed(
+                              color: Colors.white,
+                              fontSize: height * 0.017,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              widget.updateWidget(
+                                  2, UserArguments(newUser: true));
+                            },
+                            child: Text(
+                              "Sign up",
+                              style: GoogleFonts.robotoCondensed(
+                                color: HexColor("#0397fe"),
+                                fontSize: height * 0.019,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: height * 0.0125),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

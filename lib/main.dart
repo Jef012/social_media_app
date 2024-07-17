@@ -1,13 +1,8 @@
 import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
-import 'package:provider/provider.dart';
 import 'package:social_media/firebase_options.dart';
 import 'package:social_media/presentation/router/app_router.dart';
-
-import 'controller/provider/appProvider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,17 +17,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppRouter _appRouter = AppRouter();
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => AppProvider()),
-      ],
-      child: MaterialApp(
-        theme: ThemeData(
-          useMaterial3: true,
-        ),
-        onGenerateRoute: _appRouter.onGenerateRoute,
-        debugShowCheckedModeBanner: false,
+    return MaterialApp(
+      theme: ThemeData(
+        useMaterial3: true,
       ),
+      onGenerateRoute: _appRouter.onGenerateRoute,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
