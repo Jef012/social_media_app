@@ -23,9 +23,13 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        title: Text(
-          _auth.currentUser!.email.toString(),
-          style: TextStyle(fontSize: height * 0.0275),
+        title: SizedBox(
+          width: width * 0.7,
+          child: Text(
+            _auth.currentUser!.email.toString(),
+            style: TextStyle(fontSize: height * 0.0275),
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
         actions: [
           IconButton(

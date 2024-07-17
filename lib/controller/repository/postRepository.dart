@@ -11,6 +11,8 @@ class PostRepository {
         'content': content,
         'timestamp': FieldValue.serverTimestamp(),
         'userId': _auth.currentUser!.uid,
+        'likes': 0,
+        'likedBy': [],
       });
     } catch (e) {
       print("e.toString() ::: ${e.toString()}");
@@ -25,11 +27,29 @@ class PostRepository {
   }
 
   Future<void> likePost(String postId) async {
+    final String userId = _auth.currentUser!.uid;
     final DocumentReference postRef =
         _firestore.collection('posts').doc(postId);
-    await postRef.update({
-      'likes': FieldValue.increment(1),
-    });
+    final DocumentSnapshot postSnapshot = await postRef.get();
+
+    if (postSnapshot.exists) {
+      List<dynamic> likedBy = [];
+      if (postSnapshot.data() != null) {
+        dynamic postData = postSnapshot.data();
+        if (postData is Map<String, dynamic>) {
+          likedBy = postData.containsKey('likedBy') ? postData['likedBy'] : [];
+        }
+      }
+
+      if (!likedBy.contains(userId)) {
+        await postRef.update({
+          'likes': FieldValue.increment(1),
+          'likedBy': FieldValue.arrayUnion([userId]),
+        });
+      } else {
+        print("User has already liked this post");
+      }
+    }
   }
 
   Future<void> addComment(String postId, String content) async {
