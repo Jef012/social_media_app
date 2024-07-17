@@ -300,8 +300,10 @@ class _LoginPageState extends State<LoginPage> {
     )
         .then((value) {
       print("value ::: $value");
-      Utils.toastMessage("LoggedIn successfully");
-      Navigator.pushReplacementNamed(context, "/customBottonNaviBar");
+      if (value != null) {
+        Utils.toastMessage("LoggedIn successfully");
+        Navigator.pushReplacementNamed(context, "/customBottonNaviBar");
+      }
     }).onError((error, stackTrace) {
       print(" value[error] :: $error");
     });
